@@ -14,7 +14,7 @@ async function unlock(pw,quiet){
   try{
     if(!window.crypto||!crypto.subtle||!window.DecompressionStream)throw new Error('Browser not supported (needs https and a recent Chrome, Edge, Safari or Firefox)');
     $('m').style.color='#9aa';$('m').textContent='Unlocking…';
-    if(!blob)blob=new Uint8Array(await(await fetch('data.bin?v=17dd1d4636aa')).arrayBuffer());
+    if(!blob)blob=new Uint8Array(await(await fetch('data.bin?v=743a23014140')).arrayBuffer());
     const km=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);
     const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:blob.slice(0,16),iterations:310000,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['decrypt']);
     let pt;try{pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:blob.slice(16,28)},key,blob.slice(28));}catch(e){throw new Error(quiet?'':'Wrong password');}
