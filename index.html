@@ -5,19 +5,19 @@ h1{font-size:15px;letter-spacing:6px;font-weight:600;color:#ff7a3a;margin:0}
 input{background:#11141a;border:1px solid #2a303a;color:#fff;padding:12px 14px;width:280px;font-size:16px;letter-spacing:1px;outline:none;text-align:center}
 input:focus{border-color:#ff7a3a}button{background:#ff7a3a;border:0;color:#111;padding:11px 34px;font-weight:700;letter-spacing:3px;cursor:pointer}
 label{font-size:12px;opacity:.6}#m{height:20px;font-size:13px;color:#ff6060}</style></head>
-<body><form class="b" id="f"><h1>RESTRICTED · 需要口令</h1><input id="p" type="password" autocomplete="current-password" autofocus placeholder="PASSWORD">
-<label><input type="checkbox" id="r" checked style="width:auto;padding:0"> 在这台设备上记住 · remember on this device</label>
+<body><form class="b" id="f"><h1>RESTRICTED · PASSWORD REQUIRED</h1><input id="p" type="password" autocomplete="current-password" autofocus placeholder="PASSWORD">
+<label><input type="checkbox" id="r" checked style="width:auto;padding:0"> Remember on this device</label>
 <button>ENTER</button><div id="m"></div></form>
 <script>
 const $=i=>document.getElementById(i),K='bz_pw';let blob=null;
 async function unlock(pw,quiet){
   try{
-    if(!window.crypto||!crypto.subtle||!window.DecompressionStream)throw new Error('浏览器不支持（需要 https 和较新的 Chrome / Edge / Safari / Firefox）');
-    $('m').style.color='#9aa';$('m').textContent='解锁中 · unlocking…';
-    if(!blob)blob=new Uint8Array(await(await fetch('data.bin?v=563a0aaf9345')).arrayBuffer());
+    if(!window.crypto||!crypto.subtle||!window.DecompressionStream)throw new Error('Browser not supported (needs https and a recent Chrome, Edge, Safari or Firefox)');
+    $('m').style.color='#9aa';$('m').textContent='Unlocking…';
+    if(!blob)blob=new Uint8Array(await(await fetch('data.bin?v=babfda36af65')).arrayBuffer());
     const km=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);
     const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:blob.slice(0,16),iterations:310000,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['decrypt']);
-    let pt;try{pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:blob.slice(16,28)},key,blob.slice(28));}catch(e){throw new Error(quiet?'':'口令错误 · wrong password');}
+    let pt;try{pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:blob.slice(16,28)},key,blob.slice(28));}catch(e){throw new Error(quiet?'':'Wrong password');}
     const html=await new Response(new Blob([pt]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
     try{if($('r').checked)localStorage.setItem(K,pw);}catch(e){}
     document.open();document.write(html);document.close();
